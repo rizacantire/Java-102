@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/01-MaceraOyunu/01-MaceraOyunu.iml" filepath="$PROJECT_DIR$/01-MaceraOyunu/01-MaceraOyunu.iml" />
       <module fileurl="file://$PROJECT_DIR$/02-GenericList/02-GenericList.iml" filepath="$PROJECT_DIR$/02-GenericList/02-GenericList.iml" />
       <module fileurl="file://$PROJECT_DIR$/03-Book/03-Book.iml" filepath="$PROJECT_DIR$/03-Book/03-Book.iml" />
-      <module fileurl="file://$PROJECT_DIR$/04-Fixture/04-Fixture.iml" filepath="$PROJECT_DIR$/04-Fixture/04-Fixture.iml" />
+      <module fileurl="file://$PROJECT_DIR$/05-PatikaStore/05-PatikaStore.iml" filepath="$PROJECT_DIR$/05-PatikaStore/05-PatikaStore.iml" />
       <module fileurl="file://$PROJECT_DIR$/Java-102.iml" filepath="$PROJECT_DIR$/Java-102.iml" />
     </modules>
   </component>
