@@ -6,7 +6,7 @@ public class FixtureGenerator {
     private List<Team> teams = new ArrayList<>();
     private List<Team> tempTeams = new ArrayList<>();
     private List<Match> allMatches = new ArrayList<>();
-    private List<MatchWeek> matchWeeks = new ArrayList<>();
+    private List<MatchWeek> matchWeeks;
     private List<Match> gameWeek;
     private Match match;
 
@@ -82,11 +82,106 @@ public class FixtureGenerator {
         Random random  = new Random();
         team = tempTeams.get(random.nextInt(tempTeams.size()));
         tempTeams.remove(team);
-
         return team;
     }
 
     Match createMatch(){
+
+        Team home= choiceTeam();
+        Team away = choiceTeam();
+        this.match = new Match(home,away);
+        return this.match;
+    }
+
+    List<Match> generateWeek(){
+        gameWeek  = new ArrayList<>();
+        tempTeams.addAll(teams);
+        while (true){
+            if (tempTeams.size()==0){
+                break;
+            }else {
+                createMatch();
+                gameWeek.add(this.match);
+
+            }
+        }
+        return gameWeek;
+    }
+    boolean  checkWeek(List<Match> gw){
+        boolean is = true;
+        while (is){
+            for (var m : gw){
+                for (var am : allMatches){
+                    System.out.println("no break");
+                    if (am.getHomeTeam().equals(am.getHomeTeam())&& m.getAwayTeam().equals(am.getAwayTeam())){
+                        is =false;
+                        System.out.println("break");
+                        System.out.println("size : " +allMatches.size());
+                        break;
+                    }
+                }return is;
+            }
+        }return is;
+    }
+
+
+
+    List<MatchWeek> createMatchWeeks(){
+        this.matchWeeks = new ArrayList<>();
+        int round = 1;
+        int weekSize = teams.size() - 1;
+        while (true){
+            if (weekSize == 0){
+                break;
+            }else {
+                System.out.println("size : " +allMatches.size());
+                System.out.println("burda");
+                    System.out.println("size  2: " +allMatches.size());
+                    while (true){
+                        var gw = generateWeek();
+                        if (checkWeek(gw)==false){
+                            gw = generateWeek();
+
+                        }else {
+                            MatchWeek mw = new MatchWeek(gw,round);
+                            this.matchWeeks.add(mw);
+                            round++;
+                            weekSize--;
+                            for (var gm : gw){
+                                allMatches.add(gm);
+                                allMatches.add(new Match(gm.getAwayTeam(),gm.getHomeTeam()));
+                            }
+                            break;
+
+                    }
+                }
+
+            }
+        }
+        return matchWeeks;
+    }
+
+    List<MatchWeek> createFixture(){
+        matchWeeks = new ArrayList<>();
+        int i = teams.size();
+        int round = 1;
+        while (true){
+            if (i == 1){
+                break;
+            }else {
+                var createRound1= generateWeek();
+                MatchWeek m = new MatchWeek(createRound1,round);
+                matchWeeks.add(m);
+                this.allMatches.add(this.match);
+                this.allMatches.add(new Match(this.match.getAwayTeam(),this.match.getHomeTeam()));
+                round++;
+                i--;
+            }
+        }
+        return matchWeeks;
+    }
+
+    /*Match createMatch(){
         boolean isTrue = true;
         if(allMatches.size()>0){
             while (isTrue){
@@ -122,37 +217,7 @@ public class FixtureGenerator {
         }
         return this.match;
     }
+*/
 
-    List<MatchWeek> createFixture(){
-        matchWeeks = new ArrayList<>();
-        int i = teams.size();
-        int round = 1;
-        while (true){
-            if (i == 1){
-                break;
-            }else {
-                var createRound1= generateWeek();
-                MatchWeek m = new MatchWeek(createRound1,round);
-                matchWeeks.add(m);
-                this.allMatches.add(this.match);
-                this.allMatches.add(new Match(this.match.getAwayTeam(),this.match.getHomeTeam()));
-                round++;
-                i--;
-            }
-        }
-        return matchWeeks;
-    }
-    List<Match> generateWeek(){
-        gameWeek  = new ArrayList<>();
-        tempTeams.addAll(teams);
-        while (true){
-            if (tempTeams.size()==0){
-                break;
-            }else {
-                createMatch();
-                gameWeek.add(this.match);
-            }
-        }
-        return gameWeek;
-    }
+
 }
