@@ -22,4 +22,5 @@ public class Match {
     public void setAwayTeam(Team awayTeam) {
         this.awayTeam = awayTeam;
     }
+
 }
