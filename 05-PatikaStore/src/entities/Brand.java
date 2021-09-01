@@ -1,3 +1,5 @@
+package entities;
+
 public class Brand implements Comparable<Brand> {
     private int id;
     private String brandName;

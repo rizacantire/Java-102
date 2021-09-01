@@ -1,11 +1,16 @@
+package business.concretes;
+
+import business.abstracts.BrandService;
+import entities.Brand;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class StoreManager {
+public class BrandManager implements BrandService {
     private List<Brand> brands;
 
-    public StoreManager() {
+    public BrandManager() {
     }
 
     public List<Brand> getBrands() {
@@ -16,21 +21,21 @@ public class StoreManager {
         this.brands = brands;
     }
 
-    void add(String[] brandNames){
+    @Override
+    public void addBrand(String[] brandNames){
         this.brands = new ArrayList<>();
+        int id = 1 ;
         for (String brand : brandNames){
-            int id = 1 ;
             this.brands.add(new Brand(id,brand));
             id++;
         }
 
-
     }
-
-    void listBrand(){
-
+    @Override
+    public void listBrand(){
+        Collections.sort(this.brands);
         for (var brand : this.brands){
-            System.out.println(brand.getBrandName());
+            System.out.println("- " +brand.getBrandName() + " " +brand.getId());
         }
     }
 }
