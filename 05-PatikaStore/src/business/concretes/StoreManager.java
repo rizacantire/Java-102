@@ -37,9 +37,9 @@ public class StoreManager implements StoreService {
 
     @Override
     public void addNoteBook() {
-        NoteBook huawei = new NoteBook("HUAWEI Matebook 14", 1,7000,0,5,this.brandManager.getBrands().get(3),1,16,512,14);
-        NoteBook lenovo = new NoteBook("LENOVO V14 IGL",1,3699,0,5,this.brandManager.getBrands().get(1),2,8,1024,14);
-        NoteBook asus = new NoteBook("Asus Tuf Gaming",1,8199,0,6,this.brandManager.getBrands().get(5),3,32,2048,15.6);
+        NoteBook huawei = new NoteBook("HUAWEI Matebook 14", 1,7000,0,5,this.brandManager.getBrands().get(4),1,16,512,14);
+        NoteBook lenovo = new NoteBook("LENOVO V14 IGL",1,3699,0,5,this.brandManager.getBrands().get(5),2,8,1024,14);
+        NoteBook asus = new NoteBook("Asus Tuf Gaming",1,8199,0,6,this.brandManager.getBrands().get(1),3,32,2048,15.6);
         this.productManager.addNoteBook(lenovo);
         this.productManager.addNoteBook(huawei);
         this.productManager.addNoteBook(asus);
@@ -48,9 +48,9 @@ public class StoreManager implements StoreService {
 
     @Override
     public void addCellPhone() {
-        CellPhone samsung = new CellPhone("Samsung Galaxy A51",2,3199,0,3,this.brandManager.getBrands().get(0),1,128,6.5,32,4000,6,"Siyah");
-        CellPhone iphone= new CellPhone("iPhone 11 64 GB",2,7329,0,3, this.brandManager.getBrands().get(2), 2,64,6.5,5,3046,6,"Mavi");
-        CellPhone redmi = new CellPhone("Redmi Note 10 Pro 8GB",2,4012,0,8, this.brandManager.getBrands().get(7), 3,128,6.5,35,4000,12,"Beyaz");
+        CellPhone samsung = new CellPhone("Samsung Galaxy A51",2,3199,0,3,this.brandManager.getBrands().get(7),1,128,6.5,32,4000,6,"Siyah");
+        CellPhone iphone= new CellPhone("iPhone 11 64 GB",2,7329,0,3, this.brandManager.getBrands().get(0), 2,64,6.5,5,3046,6,"Mavi");
+        CellPhone redmi = new CellPhone("Redmi Note 10 Pro 8GB",2,4012,0,8, this.brandManager.getBrands().get(8), 3,128,6.5,35,4000,12,"Beyaz");
 
         this.productManager.addCellPhone(samsung);
         this.productManager.addCellPhone(iphone);
