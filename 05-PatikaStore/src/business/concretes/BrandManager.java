@@ -35,7 +35,7 @@ public class BrandManager implements BrandService {
     public void listBrand(){
         Collections.sort(this.brands);
         for (var brand : this.brands){
-            System.out.println("- " +brand.getBrandName() + " " +brand.getId());
+            System.out.println("- " +brand.getBrandName());
         }
     }
 }
