@@ -1,21 +1,41 @@
 package entities;
 
 public class Product {
-
+    private int productId;
     private String productName;
-    private int categoryId;
+    private Category category;
     private double unitPrice;
     private double discount;
     private int unitsInStock;
     private Brand brandName;
 
-    public Product(String productName, int categoryId, double unitPrice, double discount, int unitsInStock, Brand brandName) {
-
+    public Product(int productId, String productName, Category category, double unitPrice, double discount, int unitsInStock, Brand brandName) {
+        this.productId = productId;
         this.productName = productName;
-        this.categoryId = categoryId;
+        this.category = category;
         this.unitPrice = unitPrice;
         this.discount = discount;
         this.unitsInStock = unitsInStock;
+        this.brandName = brandName;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Brand getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(Brand brandName) {
         this.brandName = brandName;
     }
 
@@ -27,12 +47,12 @@ public class Product {
         this.productName = productName;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryId(Category category) {
+        this.category = category;
     }
 
     public double getUnitPrice() {

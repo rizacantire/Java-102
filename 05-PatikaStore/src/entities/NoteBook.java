@@ -5,11 +5,11 @@ import java.util.Collections;
 public class NoteBook extends Product implements Comparable<NoteBook> {
     private int noteBookId;
     private int memorySize;
-    private double storageSize;
+    private int storageSize;
     private double screenSize;
 
-    public NoteBook(String productName, int categoryId, double unitPrice, double discount, int unitsInStock, Brand brandName, int noteBookId, int memorySize, double storageSize, double screenSize) {
-        super(productName, categoryId, unitPrice, discount, unitsInStock, brandName);
+    public NoteBook(int productId, String productName, Category category, double unitPrice, double discount, int unitsInStock, Brand brandName, int noteBookId, int memorySize, int storageSize, double screenSize) {
+        super(productId, productName, category, unitPrice, discount, unitsInStock, brandName);
         this.noteBookId = noteBookId;
         this.memorySize = memorySize;
         this.storageSize = storageSize;
@@ -32,11 +32,11 @@ public class NoteBook extends Product implements Comparable<NoteBook> {
         this.memorySize = memorySize;
     }
 
-    public double getStorageSize() {
+    public int getStorageSize() {
         return storageSize;
     }
 
-    public void setStorageSize(double storageSize) {
+    public void setStorageSize(int storageSize) {
         this.storageSize = storageSize;
     }
 

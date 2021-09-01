@@ -22,4 +22,10 @@ public class CategoryManager implements CategoryService {
     public void listCategoryById(int categoryId) {
 
     }
+
+    @Override
+    public Category getCategory(int categoryId) {
+        var category = this.categories.get(categoryId);
+        return category;
+    }
 }

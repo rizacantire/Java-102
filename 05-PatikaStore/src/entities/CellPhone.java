@@ -9,8 +9,9 @@ public class CellPhone extends Product implements Comparable<CellPhone>{
     private int memorySize;
     private String color;
 
-    public CellPhone(String productName, int categoryId, double unitPrice, double discount, int unitsInStock, Brand brandName, int cellPhoneId, int storageSize, double screenSize, int camera, int batteryPower, int memorySize, String color) {
-        super(productName, categoryId, unitPrice, discount, unitsInStock, brandName);
+
+    public CellPhone(int productId, String productName, Category category, double unitPrice, double discount, int unitsInStock, Brand brandName, int cellPhoneId, int storageSize, double screenSize, int camera, int batteryPower, int memorySize, String color) {
+        super(productId, productName, category, unitPrice, discount, unitsInStock, brandName);
         this.cellPhoneId = cellPhoneId;
         this.storageSize = storageSize;
         this.screenSize = screenSize;

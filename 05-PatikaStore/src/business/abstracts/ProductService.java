@@ -6,9 +6,12 @@ import entities.NoteBook;
 public interface ProductService {
 
     void listProduct();
-    void deleteProductWithId(int id);
+    void deleleteNotebookById(int id);
+    void deleleteCellPhoneById(int id);
     void listProductByCategory(int categoryId);
     void listProductWihId(int id);
+    void listProductWihBrand(int brandId);
+
     void addNoteBook(NoteBook book);
     void addCellPhone(CellPhone cellPhone);
     void listNoteBook();

@@ -38,4 +38,16 @@ public class BrandManager implements BrandService {
             System.out.println("- " +brand.getBrandName());
         }
     }
+
+    Brand getBrandById(int brandId){
+        var a = this.brands.stream().filter(b->b.getId()==brandId).findAny();
+        return a.get();
+    }
+
+    public void listBrandById(){
+        Collections.sort(this.brands);
+        for (var brand : this.brands){
+            System.out.println(brand.getId() + " - " +brand.getBrandName());
+        }
+    }
 }
