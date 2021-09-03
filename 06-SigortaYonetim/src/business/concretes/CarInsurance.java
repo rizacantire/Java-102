@@ -5,6 +5,7 @@ import business.abstracts.Insurance;
 import java.util.Date;
 
 public class CarInsurance extends Insurance {
+    private final double carInsurancePrice = 1;
     public CarInsurance(String insuranceName, double insurancePrice, Date startDate, Date endDate) {
         super(insuranceName, insurancePrice, startDate, endDate);
     }
@@ -12,6 +13,6 @@ public class CarInsurance extends Insurance {
     @Override
     public double calculate() {
 
-        return 0;
+        return carInsurancePrice * this.getInsurancePrice();
     }
 }
