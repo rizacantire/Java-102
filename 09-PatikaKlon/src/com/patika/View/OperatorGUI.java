@@ -6,9 +6,15 @@ import com.patika.Model.Operator;
 import com.patika.Model.User;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import static javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 
 
 public class OperatorGUI extends JFrame {
@@ -33,11 +39,12 @@ public class OperatorGUI extends JFrame {
     private final Operator operator;
     private DefaultTableModel mdl_user_list;
     private Object[] row_user_list;
+    private String user_id;
 
 
     public OperatorGUI(Operator operator) {
         this.operator = operator;
-        Helper.setLaout();
+
         add(wrapper);
         setSize(1000,500);
         int x = Helper.screenCenter("x",getSize());
@@ -48,8 +55,16 @@ public class OperatorGUI extends JFrame {
         setVisible(true);
 
         lbl_welcome.setText(lbl_welcome.getText() + " " +operator.getName());
+        mdl_user_list = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column == 0)
+                    return  false;
+                return super.isCellEditable(row, column);
+            }
+        };
 
-        mdl_user_list = new DefaultTableModel();
+
         Object[] col_user_list= new Object[]{"ID","Ad Soyad","Üye Adı","Şifre","Üyelik Tipi"};
         mdl_user_list.setColumnIdentifiers(col_user_list);
 
@@ -84,14 +99,28 @@ public class OperatorGUI extends JFrame {
 
         });
         btn_user_delete.addActionListener(e -> {
+
             if (Helper.fieldIsEmpty(fld_user_id)){
                 Helper.showMsg("Seçim yapmadınız");
             }else {
                 int id = Integer.parseInt(fld_user_id.getText());
+
                 if (User.delete(id)){
                     Helper.showMsg("done");
                     loadUserModel();
+
+
                 }
+            }
+        });
+        tbl_user_list.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                user_id = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(),0).toString();
+                fld_user_id.setText(user_id);
+
+
             }
         });
     }

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Helper {
-    public static void setLaout(){
+    public static void setLayout(){
         for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()){
             if("Nimbus".equals(info.getName())){
                 try {
