@@ -1,7 +1,9 @@
 package com.patika.Model;
 
 import com.patika.Helper.DbConnector;
+import com.patika.Helper.Helper;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -80,10 +82,73 @@ public class User {
                 obj.setPass(rs.getString("pass"));
                 obj.setType(rs.getString("type"));
                 userList.add(obj);
+
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return userList;
     }
+
+    public static boolean add(String name,String uname,String pass, String type){
+        User findUser = User.getFetch(uname);
+        String query = "INSERT INTO user(name,uname,pass,type) VALUES (?,?,?,?)";
+        if (findUser!=null){
+            Helper.showMsg("Kullanıcı adı sistemde kayıtlı.");
+            return false;
+        }
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setString(1,name);
+            pr.setString(2,uname);
+            pr.setString(3,pass);
+            pr.setString(4,type);
+
+            return pr.executeUpdate() != -1;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return true;
+
+    }
+
+    public static User getFetch(String uname){
+        User obj = null;
+        String query = "SELECT * FROM user WHERE uname = ?";
+
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setString(1,uname);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()){
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUname(rs.getString("uname"));
+                obj.setPass(rs.getString("pass"));
+                obj.setType(rs.getString("type"));
+            }
+            rs.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return obj;
+    }
+
+    public static boolean delete(int id){
+        String query = "DELETE FROM user WHERE id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1, id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return true;
+    }
+
 }
