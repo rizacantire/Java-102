@@ -114,6 +114,30 @@ public class User {
 
     }
 
+    public static boolean update(int id, String name,String uname,String pass, String type){
+        User findUser = User.getFetch(uname);
+        String query = "UPDATE  user SET name = ?,uname = ?,pass = ?,type =? WHERE id = ?";
+        if (findUser!=null && findUser.getId() != id){
+            Helper.showMsg("Kullanıcı adı sistemde kayıtlı.");
+            return false;
+        }
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setString(1,name);
+            pr.setString(2,uname);
+            pr.setString(3,pass);
+            pr.setString(4,type);
+            pr.setInt(5,id);
+
+            return pr.executeUpdate() != -1;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return true;
+    }
+
     public static User getFetch(String uname){
         User obj = null;
         String query = "SELECT * FROM user WHERE uname = ?";
@@ -149,6 +173,38 @@ public class User {
         }
 
         return true;
+    }
+
+    public static String searchQuery(String name,String uname,String type){
+        String query = "SELECT * FROM user WHERE name LIKE '%{{name}}%' AND uname LIKE '%{{uname}}%' AND type LIKE '%{{type}}%'";
+        query = query.replace("{{name}}",name);
+        query = query.replace("{{uname}}",uname);
+        if(!type.isEmpty() || type != null){
+            query = query.replace("{{type}}",type);
+        }
+        return query;
+    }
+
+    public static ArrayList<User> search(String searchQuery){
+        ArrayList<User> userList = new ArrayList<>();
+        try {
+            Statement st = DbConnector.getInstace().createStatement();
+            ResultSet rs = st.executeQuery(searchQuery);
+            User obj;
+            while (rs.next()){
+                obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUname(rs.getString("uname"));
+                obj.setPass(rs.getString("pass"));
+                obj.setType(rs.getString("type"));
+                userList.add(obj);
+
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return userList;
     }
 
 }
