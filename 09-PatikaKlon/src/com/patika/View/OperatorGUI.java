@@ -57,14 +57,19 @@ public class OperatorGUI extends JFrame {
     private JPanel pnl_course_add;
     private JTextField fld_patika_name;
     private JButton btn_patika_add;
+    private JButton btn_course_delete;
+    private JTextField fld_course_id;
+    private JButton btn_course_update;
     private JTable tbl_list;
     private final Operator operator;
     private DefaultTableModel mdl_user_list;
     private Object[] row_user_list;
     private String user_id;
+    private String course_id;
     private  DefaultTableModel mdl_patika_list;
     private  Object[] row_patika_list;
     private JPopupMenu patikaMenu;
+    private JPopupMenu courseMenu;
     private DefaultTableModel mdl_course_list;
     private  Object[] row_course_list;
 
@@ -73,7 +78,7 @@ public class OperatorGUI extends JFrame {
         this.operator = operator;
 
         add(wrapper);
-        setSize(1000,500);
+        setSize(1000,600);
         int x = Helper.screenCenter("x",getSize());
         int y = Helper.screenCenter("y",getSize());
         setLocation(x,y);
@@ -108,7 +113,6 @@ public class OperatorGUI extends JFrame {
                 String uname = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(),2).toString();
                 String pass = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(),3).toString();
                 String type = tbl_user_list.getValueAt(tbl_user_list.getSelectedRow(),4).toString();
-                System.out.println(user_update_id+name+uname+pass+type);
                 if (User.update(user_update_id,name,uname,pass,type)) {
                     Helper.showMsg("done");
                     Helper.blankField(fld_user_uname,fld_user_pass,fld_user_name);
@@ -136,10 +140,21 @@ public class OperatorGUI extends JFrame {
         tbl_course_list.getTableHeader().setReorderingAllowed(false);
         tbl_course_list.getColumnModel().getColumn(0).setMaxWidth(75);
 
-        loadCourseList();
-        loadUserModel();
-        loadPatikaCombo();
-        loadUserCombo();
+        tbl_course_list.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                course_id = tbl_course_list.getValueAt(tbl_course_list.getSelectedRow(),0).toString();
+                String course_name = tbl_course_list.getValueAt(tbl_course_list.getSelectedRow(),1).toString();
+                String course_lang = tbl_course_list.getValueAt(tbl_course_list.getSelectedRow(),2).toString();
+                fld_course_id.setText(course_id);
+                btn_course_update.setEnabled(true);
+                fld_course_name.setText(course_name);
+                fld_course_lang.setText(course_lang);
+            }
+        });
+
 
         btn_course_add.addActionListener(e -> {
             if(Helper.fieldIsEmpty(fld_course_name) || Helper.fieldIsEmpty(fld_course_lang)){
@@ -252,6 +267,7 @@ public class OperatorGUI extends JFrame {
 
         btn_logout.addActionListener(e -> {
             dispose();
+            LoginGUI l = new LoginGUI();
         });
         btn_user_delete.addActionListener(e -> {
             if (Helper.fieldIsEmpty(fld_user_id)){
@@ -309,6 +325,48 @@ public class OperatorGUI extends JFrame {
                     Helper.showMsg("error");
                 }
             }
+        });
+        btn_course_delete.addActionListener(e -> {
+            if (Helper.fieldIsEmpty(fld_course_id)){
+                Helper.showMsg("Seçim yapmadınız");
+            }else {
+                if(Helper.confirm("sure")){
+                    int id = Integer.parseInt(fld_course_id.getText());
+
+                    if (Course.delete(id)){
+                        Helper.showMsg("done");
+                        loadCourseList();
+                        loadUserModel();
+                        loadPatikaCombo();
+                        loadUserCombo();
+                    }
+                }
+            }
+        });
+        btn_course_update.addActionListener(e -> {
+            int id = Integer.parseInt(fld_course_id.getText());
+            if(Helper.fieldIsEmpty(fld_course_name) || Helper.fieldIsEmpty(fld_course_lang)){
+                Helper.showMsg("fill");
+            }else {
+                String name = fld_course_name.getText();
+                String lang = fld_course_lang.getText();
+                int user_id = ((Item)cmb_course_user.getSelectedItem()).getKey();
+                int patika_id =((Item)cmb_course_patika.getSelectedItem()).getKey();
+
+                if (Course.update(id,user_id,patika_id,name,lang)) {
+                    Helper.showMsg("done");
+                    loadCourseList();
+                    loadUserModel();
+                    loadPatikaCombo();
+                    loadUserCombo();
+                    Helper.blankField(fld_course_name,fld_course_lang);
+                }
+                loadCourseList();
+                loadUserModel();
+                loadPatikaCombo();
+                loadUserCombo();
+            }
+
         });
     }
 

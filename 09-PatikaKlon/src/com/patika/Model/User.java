@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class User {
     private int id;
@@ -172,6 +173,31 @@ public class User {
             ResultSet rs = pr.executeQuery();
             if (rs.next()){
                 obj = new User();
+                obj.setId(rs.getInt("id"));
+                obj.setName(rs.getString("name"));
+                obj.setUname(rs.getString("uname"));
+                obj.setPass(rs.getString("pass"));
+                obj.setType(rs.getString("type"));
+            }
+            rs.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return obj;
+    }
+
+    public static User getFetch(String uname,String pass){
+        User obj = null;
+        String query = "SELECT * FROM user WHERE uname = ? AND pass = ?";
+
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setString(1,uname);
+            pr.setString(2,pass);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()){
+               obj = new User();
                 obj.setId(rs.getInt("id"));
                 obj.setName(rs.getString("name"));
                 obj.setUname(rs.getString("uname"));
