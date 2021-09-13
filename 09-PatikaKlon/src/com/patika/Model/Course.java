@@ -1,5 +1,14 @@
 package com.patika.Model;
 
+import com.patika.Helper.DbConnector;
+import com.patika.Helper.Helper;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 public class Course {
     private int id;
     private int user_id;
@@ -20,6 +29,8 @@ public class Course {
         this.educater = User.getFetch(user_id);
 
     }
+
+
 
     public int getId() {
         return id;
@@ -75,5 +86,82 @@ public class Course {
 
     public void setEducater(User educater) {
         this.educater = educater;
+    }
+
+    public static ArrayList<Course> getList() {
+
+        ArrayList<Course> courseList = new ArrayList<>();
+        Course obj;
+        try {
+            Statement st = DbConnector.getInstace().createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM COURSE");
+            while (rs.next()){
+                int id = rs.getInt("id");
+                int user_id = rs.getInt("user_id");
+                int patika_id = rs.getInt("patika_id");
+                String name = rs.getString("name");
+                String lang = rs.getString("lang");
+                obj = new Course(id,user_id,patika_id,name,lang);
+                courseList.add(obj);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return courseList;
+
+    }
+
+    public static ArrayList<Course> getListByUser(int userid) {
+
+        ArrayList<Course> courseList = new ArrayList<>();
+        Course obj;
+        try {
+            Statement st = DbConnector.getInstace().createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM course WHERE user_id = "+userid);
+            while (rs.next()){
+                int id = rs.getInt("id");
+                int user_id = rs.getInt("user_id");
+                int patika_id = rs.getInt("patika_id");
+                String name = rs.getString("name");
+                String lang = rs.getString("lang");
+                obj = new Course(id,user_id,patika_id,name,lang);
+                courseList.add(obj);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return courseList;
+
+    }
+
+    public static boolean delete(int id){
+        String query = "DELETE FROM course WHERE id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1, id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return true;
+    }
+    public static boolean add(int user_id,int patika_id,String name,String lang){
+        String query = "INSERT INTO course(user_id,patika_id,name,lang) VALUES (?,?,?,?)";
+
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1,user_id);
+            pr.setInt(2,patika_id);
+            pr.setString(3,name);
+            pr.setString(4,lang);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+
     }
 }
