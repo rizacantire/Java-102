@@ -50,6 +50,8 @@ public class Patika {
         return patikaList;
     }
 
+
+
     public static boolean add(String name){
         String query = "INSERT INTO patika(name) VALUES (?)";
         try {
@@ -104,4 +106,6 @@ public class Patika {
 
         return true;
     }
+
+
 }

@@ -266,8 +266,7 @@ public class OperatorGUI extends JFrame {
 
 
         btn_logout.addActionListener(e -> {
-            dispose();
-            LoginGUI l = new LoginGUI();
+            closeScreen();
         });
         btn_user_delete.addActionListener(e -> {
             if (Helper.fieldIsEmpty(fld_user_id)){
@@ -379,6 +378,13 @@ public class OperatorGUI extends JFrame {
         }
     }
 
+    private void closeScreen(){
+        if (Helper.confirm("sure")){
+            dispose();
+            LoginGUI l = new LoginGUI();
+        }
+    }
+
     private void loadPatikaCombo() {
         cmb_course_patika.removeAllItems();
         for (Patika item : Patika.getList()){
@@ -446,10 +452,6 @@ public class OperatorGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        Operator op = new Operator();
 
-        OperatorGUI opGUI = new OperatorGUI(op);
-    }
 
 }
