@@ -6,6 +6,7 @@ import com.patika.Model.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 public class EducatorGUI extends JFrame  {
     private final User user;
@@ -32,7 +33,8 @@ public class EducatorGUI extends JFrame  {
     private Object[] row_course_list;
     private DefaultTableModel mdl_content_list;
     private Object[] row_content_list;
-
+    private ArrayList<Course> course_list;
+    private ArrayList<CourseContent> course_content_list = new ArrayList<>();
 
 
     public EducatorGUI(User user){
@@ -56,7 +58,7 @@ public class EducatorGUI extends JFrame  {
         loadCourseList();
 
         mdl_content_list = new DefaultTableModel();
-        Object[] col_content = {"Id","İçerik Başlığı","Açıklama"};
+        Object[] col_content = {"Id","İçerik Başlığı","Açıklama","Ders","Youtue Link"};
         mdl_content_list.setColumnIdentifiers(col_content);
         tbl_course_content.setModel(mdl_content_list);
         row_content_list = new Object[col_content.length];
@@ -66,27 +68,32 @@ public class EducatorGUI extends JFrame  {
     private void loadContentList() {
         DefaultTableModel clear = (DefaultTableModel) tbl_course_content.getModel();
         clear.setRowCount(0);
-        var list = CourseContent.getListByCourseId(1);
-        for (CourseContent i : list){
-            System.out.println(i.toString());
+        ArrayList<CourseContent> courseContents = CourseContent.getList();
+
+        for(var a : course_list){
+            for(var cc : courseContents){
+                if (a.getId() == cc.getCourse_id()){
+                    course_content_list.add(cc);
+                }
+            }
         }
-
-       for (CourseContent item : list){
+        for(var cci : course_content_list){
             int i = 0;
-            row_content_list[i++] = item.g
-            row_content_list[i++] = item.getLang();
-            row_content_list[i++] = item.getPatika().getName();
+            row_content_list[i++] = cci.getId();
+            row_content_list[i++] = cci.getTitle();
+            row_content_list[i++] = cci.getDescription();
+            row_content_list[i++] = cci.getCourse().getName();
 
-            mdl_educator_task_list.addRow(row_course_list);
+            mdl_content_list.addRow(row_content_list);
         }
     }
 
     private void loadCourseList() {
         DefaultTableModel clear = (DefaultTableModel) tbl_educator_task.getModel();
         clear.setRowCount(0);
-        var list =  Course.getListByUser(user.getId());
-        System.out.println(list.isEmpty());
-        for (var item : list){
+        course_list =  Course.getListByUser(user.getId());
+        System.out.println(course_list.isEmpty());
+        for (var item : course_list){
             int i = 0;
             row_course_list[i++] = item.getName();
             row_course_list[i++] = item.getLang();

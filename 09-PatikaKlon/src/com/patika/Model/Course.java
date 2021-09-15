@@ -187,7 +187,7 @@ public class Course {
 
     public static Course getFetch(String name){
         Course obj = null;
-        String query = "SELECT * FROM coruse WHERE name = ?";
+        String query = "SELECT * FROM course WHERE name = ?";
 
         try {
             PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
@@ -211,12 +211,13 @@ public class Course {
 
     public static Course getFetch(int id){
         Course obj = null;
-        String query = "SELECT * FROM patika WHERE id = ?";
+        String query = "SELECT * FROM course WHERE id = ?";
         try {
             PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
             pr.setInt(1,id);
             ResultSet rs = pr.executeQuery();
             if (rs.next()){
+                System.out.println(rs.getInt("user_id"));
                 obj = new Course(rs.getInt("id"),rs.getInt("user_id"),rs.getInt("patika_id"),rs.getString("name"),rs.getString("lang"));
             }
             rs.close();
