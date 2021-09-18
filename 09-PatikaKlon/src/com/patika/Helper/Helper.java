@@ -40,6 +40,9 @@ public class Helper {
 
     public static boolean fieldIsEmpty(JTextField textField){
         return textField.getText().trim().isEmpty();
+    }
+    public static boolean textAreaIsEmpty(JTextArea textArea){
+        return textArea.getText().trim().isEmpty();
 
     }
     public static void blankField(JTextField... textFields){

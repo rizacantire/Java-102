@@ -217,7 +217,6 @@ public class Course {
             pr.setInt(1,id);
             ResultSet rs = pr.executeQuery();
             if (rs.next()){
-                System.out.println(rs.getInt("user_id"));
                 obj = new Course(rs.getInt("id"),rs.getInt("user_id"),rs.getInt("patika_id"),rs.getString("name"),rs.getString("lang"));
             }
             rs.close();

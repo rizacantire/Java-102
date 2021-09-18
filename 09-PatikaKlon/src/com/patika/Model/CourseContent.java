@@ -15,19 +15,29 @@ public class CourseContent {
     private int course_id;
     private String description;
     private String title;
+    private String youtube;
 
     private Course course;
 
-    public CourseContent(int id, int course_id, String description, String title) {
+    public CourseContent(int id, int course_id, String description, String title,String youtube) {
         this.id = id;
         this.course_id = course_id;
         this.description = description;
         this.title = title;
+        this.youtube = youtube;
         this.course = Course.getFetch(course_id);
     }
 
     public int getId() {
         return id;
+    }
+
+    public String getYoutube() {
+        return youtube;
+    }
+
+    public void setYoutube(String youtube) {
+        this.youtube = youtube;
     }
 
     public void setId(int id) {
@@ -74,13 +84,58 @@ public class CourseContent {
             pr.setInt(1,id);
             ResultSet rs = pr.executeQuery();
             if (rs.next()){
-                obj = new CourseContent(rs.getInt("id"),rs.getInt("course_id"),rs.getString("description"),rs.getString("title"));
+                obj = new CourseContent(rs.getInt("id"),rs.getInt("course_id"),rs.getString("description"),rs.getString("title"),rs.getString("youtube"));
             }
             rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return obj;
+    }
+    public static boolean add(int course_id,String description,String title,String youtube){
+        String query = "INSERT INTO CourseContent(course_id,title,description,youtube) VALUES(?,?,?,?)";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1,course_id);
+            pr.setString(2,title);
+            pr.setString(3,description);
+            pr.setString(4,youtube);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    public static boolean update(int id,int course_id,String description,String title,String youtube){
+        String query = "UPDATE CourseContent SET course_id =?,title=?,description=?,youtube=? WHERE id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1,course_id);
+            pr.setString(2,title);
+            pr.setString(3,description);
+            pr.setString(4,youtube);
+            pr.setInt(5,id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+
+    public static boolean delete(int id){
+        String  query = "DELETE FROM CourseContent WHERE id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1,id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
     public static ArrayList<CourseContent> getListByCourseId(int byId){
@@ -94,7 +149,8 @@ public class CourseContent {
                 int course_id = rs.getInt("course_id");
                 String description = rs.getString("description");
                 String title = rs.getString("title");
-                obj = new CourseContent(id,course_id,description,title);
+                String youtube= rs.getString("youtube");
+                obj = new CourseContent(id,course_id,description,title,youtube);
                 courseContents.add(obj);
             }
         } catch (SQLException e) {
@@ -114,7 +170,8 @@ public class CourseContent {
                 int course_id = rs.getInt("course_id");
                 String description = rs.getString("description");
                 String title = rs.getString("title");
-                obj = new CourseContent(id,course_id,description,title);
+                String youtube= rs.getString("youtube");
+                obj = new CourseContent(id,course_id,description,title,youtube);
                 courseContents.add(obj);
             }
         } catch (SQLException e) {
