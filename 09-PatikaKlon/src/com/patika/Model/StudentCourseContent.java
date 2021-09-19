@@ -51,6 +51,7 @@ public class StudentCourseContent {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return true;
     }
 
     public static ArrayList<StudentCourseContent> getAll(int userid){

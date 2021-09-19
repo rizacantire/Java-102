@@ -118,9 +118,10 @@ public class StudentGUI extends JFrame {
                 if (StudentPatika.add(patika_id,user.getId())) {
                     Helper.showMsg("done");
                     var courses = Course.getListByPatikaId(patika_id);
-                    var contents = CourseContent.getListByCourseId(c);
+                    var contents = CourseContent.getList();
                     user_register_patika = StudentPatika.getRegisterPatika(user.getId());
                     courses.forEach(o->StudentCourse.add(user.getId(),o.getId(),false));
+                    contents.forEach(c->StudentCourseContent.add(user.getId(),c.getCourse_id(),false));
                     loadAllList();
 
                     System.out.println(courses.size());
