@@ -138,6 +138,30 @@ public class Course {
 
     }
 
+    public static ArrayList<Course> getListByPatikaId(int patikaid) {
+
+        ArrayList<Course> courseList = new ArrayList<>();
+        Course obj;
+        try {
+            Statement st = DbConnector.getInstace().createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM course WHERE patika_id = "+patikaid);
+            while (rs.next()){
+                int id = rs.getInt("id");
+                int user_id = rs.getInt("user_id");
+                int patika_id = rs.getInt("patika_id");
+                String name = rs.getString("name");
+                String lang = rs.getString("lang");
+                obj = new Course(id,user_id,patika_id,name,lang);
+                courseList.add(obj);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return courseList;
+
+    }
+
     public static boolean delete(int id){
         String query = "DELETE FROM course WHERE id = ?";
         try {

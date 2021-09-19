@@ -367,6 +367,7 @@ public class OperatorGUI extends JFrame {
             }
 
         });
+
     }
 
     private void loadUserCombo() {
