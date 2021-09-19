@@ -2,11 +2,8 @@ package com.patika.View;
 
 import com.patika.Helper.Config;
 import com.patika.Helper.Helper;
-import com.patika.Model.Course;
-import com.patika.Model.Patika;
-import com.patika.Model.StudentCourse;
+import com.patika.Model.*;
 import com.patika.Model.StudentPatika;
-import com.patika.Model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -121,6 +118,7 @@ public class StudentGUI extends JFrame {
                 if (StudentPatika.add(patika_id,user.getId())) {
                     Helper.showMsg("done");
                     var courses = Course.getListByPatikaId(patika_id);
+                    var contents = CourseContent.getListByCourseId(c);
                     user_register_patika = StudentPatika.getRegisterPatika(user.getId());
                     courses.forEach(o->StudentCourse.add(user.getId(),o.getId(),false));
                     loadAllList();

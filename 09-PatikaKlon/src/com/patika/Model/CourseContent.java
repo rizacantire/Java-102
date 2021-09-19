@@ -159,6 +159,8 @@ public class CourseContent {
         return courseContents;
     }
 
+
+
     public static ArrayList<CourseContent> getList(){
         ArrayList<CourseContent> courseContents = new ArrayList<>();
         CourseContent obj;
