@@ -49,6 +49,8 @@ public class StudentGUI extends JFrame {
     private JPanel pnl_course_continue;
     private JLabel lbl_course_id;
     private JButton btn_course_continue;
+    private JButton btn_logout;
+    private JTextArea textArea1;
     private DefaultTableModel mdl_course_content_list;
     private Object[] row_course_content_list;
 
@@ -109,6 +111,8 @@ public class StudentGUI extends JFrame {
         mdl_course_content_list.setColumnIdentifiers(col_course_content_list);
         row_course_content_list = new Object[col_course_content_list.length];
         tbl_course_content.setModel(mdl_course_content_list);
+        loadContentList();
+        tbl_course_content.getColumnModel().getColumn(0).setMaxWidth(70);
 
         btn_patika_register.addActionListener(e -> {
             int patika_id = Integer.parseInt(fld_patika_name.getText());
@@ -130,6 +134,9 @@ public class StudentGUI extends JFrame {
                 Helper.showMsg("Derse kaydınız bulunmakta.");
             }
 
+        });
+        btn_logout.addActionListener(e -> {
+            closeScreen();
         });
         btn_course_continue.addActionListener(e->{
             int id  = Integer.parseInt(tbl_register_patika.getValueAt(tbl_register_patika.getSelectedRow(),0).toString());
@@ -154,12 +161,38 @@ public class StudentGUI extends JFrame {
                 lbl_course_id.setText(id);
             }
         });
+        tbl_course_content.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                int content_id = Integer.parseInt(tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),0).toString());
+                System.out.println(content_id);
+            }
+        });
+    }
+    private void closeScreen(){
+        if (Helper.confirm("sure")){
+            dispose();
+            LoginGUI l = new LoginGUI();
+        }
     }
 
     private void loadAllList(){
         loadRegisterPatikaList();
         loadPatikaList();
 
+    }
+    private void loadContentList(){
+        clearModel(tbl_course_content);
+        int i = 0;
+
+        for (var scc: StudentCourseContent.getAll(user.getId())){
+            i = 0;
+            row_course_content_list[i++] = scc.getCourse_content_id();
+            row_course_content_list[i++] = scc.getCourseContent().getTitle();
+            row_course_content_list[i++] = scc.getIsSuccess();
+            mdl_course_content_list.addRow(row_course_content_list);
+        }
     }
     private void loadRegisterCourseList(int id){
         clearModel(tbl_register_course_list);
@@ -209,7 +242,7 @@ public class StudentGUI extends JFrame {
 
     public static void main(String[] args) {
         Helper.setLayout();
-        StudentGUI sg = new StudentGUI(new User(4,"Ali","ali","123","student"));
+        StudentGUI sg = new StudentGUI(new User(1,"Ali","ali","123","student"));
     }
 
 }

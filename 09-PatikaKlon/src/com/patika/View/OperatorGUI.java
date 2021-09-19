@@ -3,10 +3,8 @@ package com.patika.View;
 import com.patika.Helper.Config;
 import com.patika.Helper.Helper;
 import com.patika.Helper.Item;
-import com.patika.Model.Operator;
-import com.patika.Model.Patika;
-import com.patika.Model.User;
-import com.patika.Model.Course;
+import com.patika.Model.*;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
@@ -60,6 +58,17 @@ public class OperatorGUI extends JFrame {
     private JButton btn_course_delete;
     private JTextField fld_course_id;
     private JButton btn_course_update;
+    private JPanel pnl_course_content;
+    private JTable tbl_course_content;
+    private JLabel pnl_content_add;
+    private JTextField fld_content_title;
+    private JTextArea txt_content_description;
+    private JButton btn_content_add;
+    private JTextField fld_content_youtube;
+    private JComboBox cmb_course_content_add;
+    private JButton btn_content_update;
+    private JTextField fld_update_content_id;
+    private JButton btn_delete_content;
     private JTable tbl_list;
     private final Operator operator;
     private DefaultTableModel mdl_user_list;
@@ -70,15 +79,19 @@ public class OperatorGUI extends JFrame {
     private  Object[] row_patika_list;
     private JPopupMenu patikaMenu;
     private JPopupMenu courseMenu;
+    private DefaultTableModel mdl_content_list;
+    private Object[] row_content_list;
     private DefaultTableModel mdl_course_list;
     private  Object[] row_course_list;
+    private ArrayList<CourseContent> course_content_list = new ArrayList<>();
+    private ArrayList<Course> course_list;
 
 
     public OperatorGUI(Operator operator) {
         this.operator = operator;
 
         add(wrapper);
-        setSize(1000,600);
+        setSize(1000,800);
         int x = Helper.screenCenter("x",getSize());
         int y = Helper.screenCenter("y",getSize());
         setLocation(x,y);
@@ -103,8 +116,27 @@ public class OperatorGUI extends JFrame {
         tbl_user_list.setModel(mdl_user_list);
         row_user_list = new Object[col_user_list.length];
         loadUserModel();
+        loadCourseContentCombo();
+
 
         tbl_user_list.setModel(mdl_user_list);
+        tbl_course_content.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                String content_id  = tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),0).toString();
+                String title = tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),1).toString();
+                String description = tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),2).toString();
+                String youtube = tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),4).toString();
+                fld_update_content_id.setText(content_id);
+                fld_content_title.setText(title);
+                txt_content_description.setText(description);
+                fld_content_youtube.setText(youtube);
+                btn_content_add.setEnabled(false);
+                btn_delete_content.setEnabled(true);
+                btn_content_update.setEnabled(true);
+            }
+        });
 
         tbl_user_list.getModel().addTableModelListener(e->{
             if(e.getType() == TableModelEvent.UPDATE){
@@ -140,6 +172,17 @@ public class OperatorGUI extends JFrame {
         tbl_course_list.getTableHeader().setReorderingAllowed(false);
         tbl_course_list.getColumnModel().getColumn(0).setMaxWidth(75);
 
+        mdl_content_list = new DefaultTableModel();
+        Object[] col_content = {"Id","İçerik Başlığı","Açıklama","Ders","Youtue Link"};
+        mdl_content_list.setColumnIdentifiers(col_content);
+        tbl_course_content.setModel(mdl_content_list);
+        row_content_list = new Object[col_content.length];
+
+        course_list =  Course.getList();
+        if (!course_list.isEmpty()){
+            loadContentList();
+        }
+
         tbl_course_list.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -154,6 +197,8 @@ public class OperatorGUI extends JFrame {
                 fld_course_lang.setText(course_lang);
             }
         });
+
+
 
 
         btn_course_add.addActionListener(e -> {
@@ -177,6 +222,23 @@ public class OperatorGUI extends JFrame {
                 loadUserModel();
                 loadPatikaCombo();
                 loadUserCombo();
+            }
+        });
+
+        btn_content_add.addActionListener(e -> {
+            if (Helper.fieldIsEmpty(fld_content_title)||Helper.fieldIsEmpty(fld_content_youtube)||Helper.textAreaIsEmpty(txt_content_description)){
+                Helper.showMsg("fill");
+            }else {
+                String title = fld_content_title.getText();
+                int course_id = ((Item)cmb_course_content_add.getSelectedItem()).getKey();
+                String description = txt_content_description.getText();
+                String yotube = fld_content_youtube.getText();
+                if (CourseContent.add(course_id,description,title,yotube)){
+                    Helper.showMsg("done");
+                    loadContentList();
+                }else {
+                    Helper.showMsg("error");
+                }
             }
         });
 
@@ -231,6 +293,7 @@ public class OperatorGUI extends JFrame {
         tbl_patika_list.setComponentPopupMenu(patikaMenu);
         tbl_patika_list.getTableHeader().setReorderingAllowed(false);
         tbl_patika_list.getColumnModel().getColumn(0).setMaxWidth(75);
+        txt_content_description.getWidth();
 
         tbl_patika_list.addMouseListener(new MouseAdapter() {
             @Override
@@ -367,7 +430,59 @@ public class OperatorGUI extends JFrame {
             }
 
         });
+        btn_content_update.addActionListener(e -> {
+            if (Helper.fieldIsEmpty(fld_content_title)||Helper.fieldIsEmpty(fld_content_youtube)||Helper.textAreaIsEmpty(txt_content_description)){
+                Helper.showMsg("fill");
+            }else{
+                int content_id = Integer.parseInt(fld_update_content_id.getText().toString());
+                int course_id = ((Item)cmb_course_content_add.getSelectedItem()).getKey();
+                if (CourseContent.update(content_id,course_id,txt_content_description.getText(),fld_content_title.getText(),fld_content_youtube.getText())){
+                    Helper.showMsg("done");
+                    fld_update_content_id.setText(null);
+                    btn_content_update.setEnabled(false);
+                    btn_content_add.setEnabled(true);
+                    btn_delete_content.setEnabled(false);
+                }
+                loadAllList();
 
+            }
+        });
+
+    }
+
+    private void loadAllList(){
+        loadCourseContentCombo();
+        loadContentList();
+        loadUserModel();
+        loadCourseList();
+        loadPatikaCombo();
+        loadPatikaModel();
+        loadCourseContentCombo();
+        loadUserCombo();
+    }
+    private void loadContentList() {
+        DefaultTableModel clear = (DefaultTableModel) tbl_course_content.getModel();
+        clear.setRowCount(0);
+        ArrayList<CourseContent> courseContents = CourseContent.getList();
+        course_content_list = new ArrayList<>();
+
+        int i = 0;
+        for(var a : course_list){
+            for(var cc : courseContents){
+                if (a.getId() == cc.getCourse_id()){
+                    course_content_list.add(cc);
+                }
+            }
+        }
+        for(var cci : course_content_list){
+            i = 0;
+            row_content_list[i++] = cci.getId();
+            row_content_list[i++] = cci.getTitle();
+            row_content_list[i++] = cci.getDescription();
+            row_content_list[i++] = cci.getCourse().getName();
+            row_content_list[i++] = cci.getYoutube();
+            mdl_content_list.addRow(row_content_list);
+        }
     }
 
     private void loadUserCombo() {
@@ -376,6 +491,13 @@ public class OperatorGUI extends JFrame {
             if(user.getType().toLowerCase(Locale.ROOT).equals("educator")){
                 cmb_course_user.addItem(new Item(user.getId(),user.getName()));
             }
+        }
+    }
+
+    private void loadCourseContentCombo() {
+        cmb_course_content_add.removeAllItems();
+        for (Course c : Course.getList()){
+            cmb_course_content_add.addItem(new Item(c.getId(),c.getName()));
         }
     }
 
@@ -451,6 +573,11 @@ public class OperatorGUI extends JFrame {
             row_user_list[i++] = item.getType();
             mdl_user_list.addRow(row_user_list);
         }
+    }
+
+    public static void main(String[] args) {
+        Helper.setLayout();
+        OperatorGUI gui = new OperatorGUI(new Operator());
     }
 
 

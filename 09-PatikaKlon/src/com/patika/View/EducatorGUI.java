@@ -91,7 +91,10 @@ public class EducatorGUI extends JFrame  {
         mld_quiz_list.setColumnIdentifiers(col_quiz);
         tbl_quiz_list.setModel(mld_quiz_list);
         row_quiz_list = new Object[col_quiz.length];
-        loadQuizList();
+        if (!course_list.isEmpty()){
+            loadQuizList();
+        }
+
 
 
         btn_content_add.addActionListener(e -> {
@@ -229,20 +232,24 @@ public class EducatorGUI extends JFrame  {
     private void loadQuizList(){
         DefaultTableModel clear = (DefaultTableModel) tbl_quiz_list.getModel();
         clear.setRowCount(0);
-        this.quizzes = Quiz.getList();
         int i =0;
-        for (var q :quizzes){
-            i =0;
-            row_quiz_list[i++] =q.getId();
-            row_quiz_list[i++] =q.getQuestion();
-            row_quiz_list[i++] =q.getUser_answer1();
-            row_quiz_list[i++] =q.getUser_answer2();
-            row_quiz_list[i++] =q.getUser_answer3();
-            row_quiz_list[i++] =q.getUser_answer4();
-            row_quiz_list[i++] =q.getAnswer();
-            row_quiz_list[i++] =q.getContent().getTitle();
-            mld_quiz_list.addRow(row_quiz_list);
+        if (!Quiz.getList().isEmpty()){
+            this.quizzes = Quiz.getList();
+
+            for (var q :quizzes){
+                i =0;
+                row_quiz_list[i++] =q.getId();
+                row_quiz_list[i++] =q.getQuestion();
+                row_quiz_list[i++] =q.getUser_answer1();
+                row_quiz_list[i++] =q.getUser_answer2();
+                row_quiz_list[i++] =q.getUser_answer3();
+                row_quiz_list[i++] =q.getUser_answer4();
+                row_quiz_list[i++] =q.getAnswer();
+                row_quiz_list[i++] =q.getContent().getTitle();
+                mld_quiz_list.addRow(row_quiz_list);
+            }
         }
+
     }
 
     private void loadContentList() {
