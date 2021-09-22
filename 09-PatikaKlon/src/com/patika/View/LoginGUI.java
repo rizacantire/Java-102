@@ -2,14 +2,10 @@ package com.patika.View;
 
 import com.patika.Helper.Config;
 import com.patika.Helper.Helper;
-import com.patika.Model.Educator;
 import com.patika.Model.Operator;
 import com.patika.Model.User;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Locale;
 
 public class LoginGUI extends JFrame {
@@ -19,10 +15,13 @@ public class LoginGUI extends JFrame {
     private JTextField fld_user_name;
     private JTextField fld_user_pass;
     private JButton btn_login;
+    private JPanel pnl_register_user;
+    private JTextField fld_student_name;
+    private JButton btn_user_register;
 
     public LoginGUI() {
         add(wrapper);
-        setSize(550,500);
+        setSize(550,550);
         int x = Helper.screenCenter("x",getSize());
         int y = Helper.screenCenter("y",getSize());
         setLocation(x,y);
@@ -53,6 +52,20 @@ public class LoginGUI extends JFrame {
 
                     dispose();
 
+                }
+            }
+        });
+        btn_user_register.addActionListener(e->{
+            if(Helper.fieldIsEmpty(fld_user_name) || Helper.fieldIsEmpty(fld_user_pass)||Helper.fieldIsEmpty(fld_student_name)){
+                Helper.showMsg("fill");
+            }else {
+                User u = User.getFetch(fld_user_name.getText());
+                if(u==null){
+                    Helper.showMsg("Kayıt Başarılı");
+                    User.add(fld_student_name.getText(),fld_user_name.getText(),fld_user_pass.getText(),"Student");
+                }else {
+
+                    Helper.showMsg("Kullanıcı sistemde kayıtlı.");
                 }
             }
         });

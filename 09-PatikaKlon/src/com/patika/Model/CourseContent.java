@@ -1,9 +1,6 @@
 package com.patika.Model;
 
 import com.patika.Helper.DbConnector;
-import org.sqlite.core.DB;
-
-import javax.swing.plaf.nimbus.State;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

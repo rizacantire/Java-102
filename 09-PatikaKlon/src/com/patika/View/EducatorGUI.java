@@ -3,16 +3,16 @@ package com.patika.View;
 import com.patika.Helper.Config;
 import com.patika.Helper.Helper;
 import com.patika.Helper.Item;
-import com.patika.Model.*;
+import com.patika.Model.Course;
+import com.patika.Model.CourseContent;
+import com.patika.Model.Quiz;
+import com.patika.Model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class EducatorGUI extends JFrame  {
     private final User user;
@@ -58,7 +58,6 @@ public class EducatorGUI extends JFrame  {
     private ArrayList<Course> course_list;
     private ArrayList<CourseContent> course_content_list = new ArrayList<>();
 
-
     public EducatorGUI(User user){
         this.user = user;
         add(wrapper);
@@ -95,8 +94,6 @@ public class EducatorGUI extends JFrame  {
             loadQuizList();
         }
 
-
-
         btn_content_add.addActionListener(e -> {
             if (Helper.fieldIsEmpty(fld_content_title)||Helper.fieldIsEmpty(fld_content_youtube)||Helper.textAreaIsEmpty(txt_content_description)){
                 Helper.showMsg("fill");
@@ -105,7 +102,7 @@ public class EducatorGUI extends JFrame  {
                 int course_id = ((Item)cmb_course_content_add.getSelectedItem()).getKey();
                 String description = txt_content_description.getText();
                 String yotube = fld_content_youtube.getText();
-                if (CourseContent.add(course_id,title,description,yotube)){
+                if (CourseContent.add(course_id,description,title,yotube)){
                     Helper.showMsg("done");
                     loadAllList();
                 }else {
@@ -249,7 +246,6 @@ public class EducatorGUI extends JFrame  {
                 mld_quiz_list.addRow(row_quiz_list);
             }
         }
-
     }
 
     private void loadContentList() {
@@ -304,13 +300,8 @@ public class EducatorGUI extends JFrame  {
         }
     }
 
-
-
-
-
     public static void main(String[] args) {
         Helper.setLayout();
         EducatorGUI eg = new EducatorGUI(new User(2,"Ali Emmi","ali","1234","Educator"));
     }
-
 }

@@ -3,15 +3,12 @@ package com.patika.View;
 import com.patika.Helper.Config;
 import com.patika.Helper.Helper;
 import com.patika.Model.*;
-import com.patika.Model.StudentPatika;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class StudentGUI extends JFrame {
     private JPanel wrapper;
@@ -53,6 +50,10 @@ public class StudentGUI extends JFrame {
     private JTextArea textArea1;
     private DefaultTableModel mdl_course_content_list;
     private Object[] row_course_content_list;
+    private JTextArea txt_course_content;
+    private JButton btn_finish_course;
+    private JTextArea txt_quiz;
+
 
 
     private ArrayList<StudentPatika> user_register_patika;
@@ -107,7 +108,7 @@ public class StudentGUI extends JFrame {
         });
 
         mdl_course_content_list = new DefaultTableModel();
-        Object[] col_course_content_list = {"Id","Ders Adı","Bitirme durumu"};
+        Object[] col_course_content_list = {"Id","Ders Adı","Kurs Adı","Bitirme durumu"};
         mdl_course_content_list.setColumnIdentifiers(col_course_content_list);
         row_course_content_list = new Object[col_course_content_list.length];
         tbl_course_content.setModel(mdl_course_content_list);
@@ -122,13 +123,20 @@ public class StudentGUI extends JFrame {
                 if (StudentPatika.add(patika_id,user.getId())) {
                     Helper.showMsg("done");
                     var courses = Course.getListByPatikaId(patika_id);
-                    var contents = CourseContent.getList();
-                    user_register_patika = StudentPatika.getRegisterPatika(user.getId());
-                    courses.forEach(o->StudentCourse.add(user.getId(),o.getId(),false));
-                    contents.forEach(c->StudentCourseContent.add(user.getId(),c.getCourse_id(),false));
-                    loadAllList();
+                    ArrayList<CourseContent> contents = new ArrayList<>();
+                    courses.forEach(o->{
+                        var c = CourseContent.getListByCourseId(o.getId());
+                        StudentCourse.add(user.getId(),o.getId(),false);
+                        contents.addAll(c);
+                    });
 
-                    System.out.println(courses.size());
+                    user_register_patika = StudentPatika.getRegisterPatika(user.getId());
+                    //courses.forEach(o->StudentCourse.add(user.getId(),o.getId(),false));
+                    contents.forEach(c->{
+                        StudentCourseContent.add(user.getId(),c.getId(),false);
+                    });
+                    loadAllList();
+                    loadContentList();
                 }
             }else {
                 Helper.showMsg("Derse kaydınız bulunmakta.");
@@ -139,8 +147,11 @@ public class StudentGUI extends JFrame {
             closeScreen();
         });
         btn_course_continue.addActionListener(e->{
-            int id  = Integer.parseInt(tbl_register_patika.getValueAt(tbl_register_patika.getSelectedRow(),0).toString());
+            int id = Integer.parseInt(lbl_course_id.getText());
+            //int id  = Integer.parseInt(tbl_register_patika.getValueAt(tbl_register_patika.getSelectedRow(),0).toString());
             pnl_patika.setSelectedIndex(2);
+            loadContentContinueList(id);
+            System.out.println(id);
 
 
         });
@@ -167,9 +178,32 @@ public class StudentGUI extends JFrame {
                 super.mousePressed(e);
                 int content_id = Integer.parseInt(tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),0).toString());
                 System.out.println(content_id);
+                var contents = StudentCourseContent.getAll(user.getId());
+                var icerik = contents.stream().filter(o->o.getCourseContent().getId()==content_id).findAny();
+                var c = icerik.get().getCourseContent().getDescription();
+                var quiz = Quiz.getList();
+                txt_course_content.setText(c+("\n"+icerik.get().getCourseContent().getYoutube()));
+                txt_quiz.setText(quiz.get(0).getQuestion());
             }
         });
     }
+
+    private void loadContentContinueList(int id) {
+        clearModel(tbl_course_content);
+        int i = 0;
+
+        for (var scc: StudentCourseContent.getAll(user.getId())){
+            if(scc.getCourseContent().getCourse().getId()==id){
+                i = 0;
+                row_course_content_list[i++] = scc.getCourse_content_id();
+                row_course_content_list[i++] = scc.getCourseContent().getTitle();
+                row_course_content_list[i++] = scc.getCourseContent().getCourse().getName();
+                row_course_content_list[i++] = scc.getIsSuccess();
+                mdl_course_content_list.addRow(row_course_content_list);
+            }
+        }
+    }
+
     private void closeScreen(){
         if (Helper.confirm("sure")){
             dispose();
@@ -190,8 +224,10 @@ public class StudentGUI extends JFrame {
             i = 0;
             row_course_content_list[i++] = scc.getCourse_content_id();
             row_course_content_list[i++] = scc.getCourseContent().getTitle();
+            row_course_content_list[i++] = scc.getCourseContent().getCourse().getName();
             row_course_content_list[i++] = scc.getIsSuccess();
             mdl_course_content_list.addRow(row_course_content_list);
+
         }
     }
     private void loadRegisterCourseList(int id){
