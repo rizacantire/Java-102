@@ -156,6 +156,26 @@ public class Quiz {
 
         return true;
     }
+    public static Quiz getFetch(int quiz_id){
+        Quiz obj = null;
+        String query = "SELECT * FROM Quiz  WHERE id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1,quiz_id);
+            ResultSet rs = pr.executeQuery();
+            if (rs.next()){
+                obj = new Quiz(rs.getInt("id"),rs.getInt("course_content_id"),
+                        rs.getString("question"),
+                        rs.getString("user_answer1"),rs.getString("user_answer2"),
+                        rs.getString("user_answer3"),rs.getString("user_answer4"),
+                        rs.getString("answer"));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
 
     public static ArrayList<Quiz> getList(){
         ArrayList<Quiz> quizzes = new ArrayList<>();

@@ -13,6 +13,10 @@ public class StudentCourseContent {
     private int course_content_id;
     private boolean isSuccess;
 
+
+
+    private int raiting;
+
     private User user;
     private CourseContent courseContent;
 
@@ -32,6 +36,7 @@ public class StudentCourseContent {
             pr.setInt(1,user_id);
             pr.setInt(2,course_content_id);
             pr.setBoolean(3,isSuccess);
+
             return pr.executeUpdate() != -1;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -47,6 +52,19 @@ public class StudentCourseContent {
             pr.setInt(2,course_content_id);
             pr.setBoolean(3,isSuccess);
             pr.setInt(4,id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return true;
+    }
+
+    public static boolean updateRaiting(int id,int raiting){
+        String query = "UPDATE StudentCourseContent SET raiting=? WHERE id =?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setInt(1,raiting);
+            pr.setInt(2,id);
             return pr.executeUpdate() != -1;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -121,5 +139,12 @@ public class StudentCourseContent {
 
     public void setCourseContent(CourseContent courseContent) {
         this.courseContent = courseContent;
+    }
+    public int getRaiting() {
+        return raiting;
+    }
+
+    public void setRaiting(int raiting) {
+        this.raiting = raiting;
     }
 }

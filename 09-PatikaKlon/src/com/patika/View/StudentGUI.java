@@ -53,6 +53,17 @@ public class StudentGUI extends JFrame {
     private JTextArea txt_course_content;
     private JButton btn_finish_course;
     private JTextArea txt_quiz;
+    private JRadioButton radioButton1;
+    private JRadioButton radioButton2;
+    private JRadioButton radioButton3;
+    private JRadioButton radioButton4;
+    private JButton button1;
+    private ButtonGroup g1;
+    private String answerQuiz;
+    private JPanel pnl_quiz;
+    private int content_id;
+    private int student_course_content_id;
+
 
 
 
@@ -90,6 +101,13 @@ public class StudentGUI extends JFrame {
             loadAllList();
         }
 
+        g1 = new ButtonGroup();
+        g1.add(radioButton1);
+        g1.add(radioButton2);
+        g1.add(radioButton3);
+        g1.add(radioButton4);
+
+
 
         mdl_regiter_course_list = new DefaultTableModel();
         Object[] col_register_course_list = {"Id","Patika","Kurs Adı","Tamamlandı mı?"};
@@ -108,7 +126,7 @@ public class StudentGUI extends JFrame {
         });
 
         mdl_course_content_list = new DefaultTableModel();
-        Object[] col_course_content_list = {"Id","Ders Adı","Kurs Adı","Bitirme durumu"};
+        Object[] col_course_content_list = {"Id","Ders Kodu","Ders Adı","Kurs Adı","Bitirme durumu"};
         mdl_course_content_list.setColumnIdentifiers(col_course_content_list);
         row_course_content_list = new Object[col_course_content_list.length];
         tbl_course_content.setModel(mdl_course_content_list);
@@ -172,21 +190,86 @@ public class StudentGUI extends JFrame {
                 lbl_course_id.setText(id);
             }
         });
+        pnl_quiz.setVisible(false);
         tbl_course_content.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                int content_id = Integer.parseInt(tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),0).toString());
-                System.out.println(content_id);
+                content_id = Integer.parseInt(tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),0).toString());
+                student_course_content_id = Integer.parseInt(tbl_course_content.getValueAt(tbl_course_content.getSelectedRow(),1).toString());
                 var contents = StudentCourseContent.getAll(user.getId());
                 var icerik = contents.stream().filter(o->o.getCourseContent().getId()==content_id).findAny();
                 var c = icerik.get().getCourseContent().getDescription();
                 var quiz = Quiz.getList();
                 txt_course_content.setText(c+("\n"+icerik.get().getCourseContent().getYoutube()));
-                txt_quiz.setText(quiz.get(0).getQuestion());
+                quiz.forEach(a->{
+                    if(content_id==a.getId()){
+                        //var q =Quiz.getFetch(a.getId());
+                        StudentCourseQuiz.add(user.getId(),a.getId(),false);
+                        pnl_quiz.setVisible(true);
+                        txt_quiz.setText(a.getQuestion());
+                        radioButton1.setText(a.getUser_answer1());
+                        radioButton2.setText(a.getUser_answer2());
+                        radioButton3.setText(a.getUser_answer3());
+                        radioButton4.setText(a.getUser_answer4());
+                        answerQuiz = a.getAnswer();
+                    }else {
+                        pnl_quiz.setVisible(false);
+                        txt_quiz.setText(null);
+                        radioButton1.setText(null);
+                        radioButton2.setText(null);
+                        radioButton3.setText(null);
+                        radioButton4.setText(null);
+                    }
+                });
+
+
             }
         });
+
+        btn_course_raiting.addActionListener(e->{
+            int raiting = Integer.parseInt(cmb_course_raiting.getSelectedItem().toString());
+            System.out.println(raiting);
+            System.out.println(student_course_content_id);
+            StudentCourseContent.updateRaiting(student_course_content_id, raiting);
+        });
+
+        button1.addActionListener(e-> {
+
+
+            if (radioButton1.isSelected()) {
+                if (answerQuiz(answerQuiz,radioButton1.getText())){
+
+                }
+            } else if (radioButton2.isSelected()) {
+                if (answerQuiz(answerQuiz,radioButton2.getText())){
+
+                }
+            } else if (radioButton3.isSelected()) {
+                if (answerQuiz(answerQuiz,radioButton3.getText())){
+
+                }
+            } else if (radioButton4.isSelected()) {
+                if (answerQuiz(answerQuiz,radioButton4.getText())){
+
+                }
+            }else {
+                Helper.showMsg("fill");
+            }
+
+
+        });
+
     }
+    private boolean answerQuiz(String answer,String question){
+        boolean a = false;
+        if (question.equals(answer)){
+            a =true;
+            Helper.showMsg("Cevap Doğru");
+        }
+        return a;
+    }
+
 
     private void loadContentContinueList(int id) {
         clearModel(tbl_course_content);
@@ -194,8 +277,10 @@ public class StudentGUI extends JFrame {
 
         for (var scc: StudentCourseContent.getAll(user.getId())){
             if(scc.getCourseContent().getCourse().getId()==id){
+
                 i = 0;
                 row_course_content_list[i++] = scc.getCourse_content_id();
+                row_course_content_list[i++] = scc.getId();
                 row_course_content_list[i++] = scc.getCourseContent().getTitle();
                 row_course_content_list[i++] = scc.getCourseContent().getCourse().getName();
                 row_course_content_list[i++] = scc.getIsSuccess();
@@ -223,6 +308,7 @@ public class StudentGUI extends JFrame {
         for (var scc: StudentCourseContent.getAll(user.getId())){
             i = 0;
             row_course_content_list[i++] = scc.getCourse_content_id();
+            row_course_content_list[i++] = scc.getId();
             row_course_content_list[i++] = scc.getCourseContent().getTitle();
             row_course_content_list[i++] = scc.getCourseContent().getCourse().getName();
             row_course_content_list[i++] = scc.getIsSuccess();
@@ -237,7 +323,7 @@ public class StudentGUI extends JFrame {
         for (var rcl : StudentCourse.getAll(user.getId())){
             if(rcl.getCourse().getPatika().getId()==id){
                 i =0;
-                row_register_course_list[i++] = rcl.getCourse_id();
+                row_register_course_list[i++] = rcl.getCourse().getId();
                 row_register_course_list[i++] = rcl.getCourse().getPatika().getName();
                 row_register_course_list[i++] = rcl.getCourse().getName();
                 row_register_course_list[i++] = rcl.getIsSuccess();
