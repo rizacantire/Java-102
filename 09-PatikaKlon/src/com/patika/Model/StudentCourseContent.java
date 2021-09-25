@@ -20,11 +20,12 @@ public class StudentCourseContent {
     private User user;
     private CourseContent courseContent;
 
-    public StudentCourseContent(int id, int user_id, int course_content_id, boolean isSuccess) {
+    public StudentCourseContent(int id, int user_id, int course_content_id, boolean isSuccess,int raiting) {
         this.id = id;
         this.user_id = user_id;
         this.course_content_id = course_content_id;
         this.isSuccess = isSuccess;
+        this.raiting = raiting;
         this.user = User.getFetch(user_id);
         this.courseContent = CourseContent.getFetch(course_content_id);
     }
@@ -71,6 +72,18 @@ public class StudentCourseContent {
         }
         return true;
     }
+    public static boolean updateSuccess(int id,boolean isSuccess){
+        String query = "UPDATE StudentCourseContent SET isSuccess=? WHERE id =?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setBoolean(1,isSuccess);
+            pr.setInt(2,id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return true;
+    }
 
     public static ArrayList<StudentCourseContent> getAll(int userid){
         ArrayList<StudentCourseContent> contents = new ArrayList<>();
@@ -82,7 +95,7 @@ public class StudentCourseContent {
             while (rs.next()){
                 obj = new StudentCourseContent(
                         rs.getInt("id"),rs.getInt("user_id"),
-                        rs.getInt("course_content_id"),rs.getBoolean("isSuccess")
+                        rs.getInt("course_content_id"),rs.getBoolean("isSuccess"),rs.getInt("raiting")
                 );
                 contents.add(obj);
             }

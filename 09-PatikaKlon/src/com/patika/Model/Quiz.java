@@ -144,6 +144,7 @@ public class Quiz {
     }
 
 
+
     public static boolean delete(int id){
         String query = "DELETE FROM quiz WHERE id = ?";
         try {

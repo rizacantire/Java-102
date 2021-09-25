@@ -3,7 +3,9 @@ package com.patika.Model;
 import com.patika.Helper.DbConnector;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class StudentCourseQuiz {
@@ -39,10 +41,35 @@ public class StudentCourseQuiz {
 
     }
 
+    public static boolean update(int id,boolean isSuccess){
+        String query = "UPDATE StudentCourseQuiz SET isSuccess = ? WHERE id = ?";
+        try {
+            PreparedStatement pr = DbConnector.getInstace().prepareStatement(query);
+            pr.setBoolean(1,isSuccess);
+            pr.setInt(2,id);
+            return pr.executeUpdate() != -1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public static ArrayList<StudentCourseQuiz> getList(){
         ArrayList<StudentCourseQuiz> courseQuizs = new ArrayList<>();
         StudentCourseQuiz obj;
-
+        try {
+            Statement pr = DbConnector.getInstace().createStatement();
+            ResultSet rs = pr.executeQuery("SELECT * FROM StudentCourseQuiz");
+            int id = rs.getInt("id");
+            int user_id = rs.getInt("user_id");
+            int quiz_id = rs.getInt("quiz_id");
+            boolean isSuccess = rs.getBoolean("isSuccess");
+            rs.close();
+            obj = new StudentCourseQuiz(id,user_id,quiz_id,isSuccess);
+            courseQuizs.add(obj);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return courseQuizs;
     }
