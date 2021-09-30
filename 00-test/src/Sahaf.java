@@ -11,7 +11,7 @@ public class Sahaf {
     public static ArrayList<String> stockSahaf = new ArrayList<>();
     public static ArrayList<String> title = new ArrayList<>();
     public static ArrayList<String> prices= new ArrayList<>();
-    public static ArrayList<Book> books = new ArrayList<>();
+    public static int pageNo;
 
     public static void main(String[] args) {
         /*var link = "https://www.nadirkitap.com/sahaflar.php?ara=1&favori=0&rumuz=&sehir=35&page=";
@@ -33,17 +33,18 @@ public class Sahaf {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String q = "Ve KarŞINIzda";
+        String q = "HALİT";
 
         q = q.replace(" ","+");
         q = q.replace("Ş","%DE");
         q = q.replace("ş","%FD%FE");
         q. replace("Ç","%C7");
         q = q.replace("İ","%DD");
-        System.out.println(q);
 
         var linkSearch = "https://www.nadirkitap.com/kitapara_sonuc.php?kelime="+q+"&siralama=fiyatartan&bks=30&page=";
-        for(int i = 1; i<=2;i++){
+        lastPage(linkSearch,".pagination-product-bottom");
+        System.out.println(pageNo);
+        /*for(int i = 1; i<=2;i++){
             say(linkSearch+i,"li span a",searchList);
             say(linkSearch+i,"ul li h4 a",title);
             say(linkSearch+i,".product-list-price",prices);
@@ -61,7 +62,7 @@ public class Sahaf {
                     System.out.println();
                 }
             });
-        }
+        }*/
 
 
 
@@ -95,6 +96,17 @@ public class Sahaf {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }*/
+    }
+    public static void lastPage(String link, String searchString){
+        try {
+            document = Jsoup.connect(link).get();
+            var element = document.select(searchString);
+            System.out.println(element);
+            //pageNo = Integer.parseInt(element.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void say (String link,String searchString,ArrayList<String> list){

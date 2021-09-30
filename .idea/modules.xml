@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/05-PatikaStore/05-PatikaStore.iml" filepath="$PROJECT_DIR$/05-PatikaStore/05-PatikaStore.iml" />
       <module fileurl="file://$PROJECT_DIR$/06-SigortaYonetim/06-SigortaYonetim.iml" filepath="$PROJECT_DIR$/06-SigortaYonetim/06-SigortaYonetim.iml" />
       <module fileurl="file://$PROJECT_DIR$/09-PatikaKlon/09-PatikaKlon.iml" filepath="$PROJECT_DIR$/09-PatikaKlon/09-PatikaKlon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/10-OtelAgency/10-OtelAgency.iml" filepath="$PROJECT_DIR$/10-OtelAgency/10-OtelAgency.iml" />
       <module fileurl="file://$PROJECT_DIR$/Java-102.iml" filepath="$PROJECT_DIR$/Java-102.iml" />
     </modules>
   </component>
